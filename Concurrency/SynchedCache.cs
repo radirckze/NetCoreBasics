@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CSExtended.Concurrency {
+namespace NetCoreBasics.Concurrency {
 
     //A simple example of a cache of 2 integer values such that val2 = 2*val1. 
     //The cache supports multiple readers but a single writer. 

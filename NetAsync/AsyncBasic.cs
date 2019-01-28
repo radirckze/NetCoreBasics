@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CSExtended.NetAsync {
+namespace NetCoreBasics.NetAsync {
 
     //Testing the ASP async programming paradigm
     //See README for some important notes

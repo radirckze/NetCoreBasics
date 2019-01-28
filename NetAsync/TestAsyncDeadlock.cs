@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CSExtended.NetAsync {
+namespace NetCoreBasics.NetAsync {
 
     /* Testing out the case described in the article below which I cannot reproduce.
      * http://blog.stephencleary.com/2012/07/dont-block-on-async-code.html

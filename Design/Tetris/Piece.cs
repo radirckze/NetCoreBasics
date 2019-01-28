@@ -1,6 +1,6 @@
 using System;
 
-namespace CSExtended.Design.Tetris {
+namespace NetCoreBasics.Design.Tetris {
 
     public class Piece {
 
