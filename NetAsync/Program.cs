@@ -1,24 +1,15 @@
-﻿using NetCoreBasics.Concurrency;
-using NetCoreBasics.NetAsync;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System;
 
-namespace NetCoreBasics
+namespace NetCoreBasics.NetAsync
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Running CS Entended stuff ...");
+           Console.WriteLine("Running CS Basic stuff ...");
 
-            bool runSynchedCache = false;
-            bool runAsyncBasic = false;
+            bool runAsyncBasic = true;
             bool runTestDeadlock = false;
-
-            if (runSynchedCache) {
-                SynchedCache.TestSynchedCache();
-            }
 
             if (runAsyncBasic) {
                 AsyncBasic.RunSimpleDelayTest(); //synchronous call
@@ -31,7 +22,6 @@ namespace NetCoreBasics
                 TestAsyncDeadlock tad = new TestAsyncDeadlock();
                 tad.TestDeadlock();
             }
-
         }
     }
 }
