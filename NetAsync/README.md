@@ -9,6 +9,8 @@ official / vetted documentation. Some good resources:
 https://blog.stephencleary.com/2012/02/async-and-await.html
 https://msdn.microsoft.com/en-us/magazine/dn802603.aspx
 https://docs.microsoft.com/en-us/dotnet/csharp/async
+[ExecutuionContext and SynchronizationContext] https://devblogs.microsoft.com/pfxteam/executioncontext-vs-synchronizationcontext/
+[Best practices] https://msdn.microsoft.com/en-us/magazine/jj991977.aspx
 
 The concept is fairly simple. The two key concepts are: async modifier and await.
 
