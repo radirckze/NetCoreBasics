@@ -11,24 +11,45 @@ namespace NetCoreBasics.NetAsync {
     public class AsyncBasic {
 
         // A simple async method that delays so I can control execution time. 
-        public async Task<int> SimpleDelaysAsync(int millis) {
-
-            Console.WriteLine("In SimpleDelatAsync ...");
-            //The await yeilds (that is it returns execution to the calling method)
-            //When it yeilds it returns an incomplete task.
+        public async Task<int> SimpleDelayAsync(int millis) 
+        {
+            Console.WriteLine(@"In SimpleDelayAsync .... The Thread id is: {0}.", Thread.CurrentThread.ManagedThreadId);
+            //The await yeilds (that is it returns incomplete task to calling method).
             await Task.Delay(millis); 
-            //Execution will resume from this point when the async operation 
-            //is completed. 
-            Console.WriteLine("Exiting SimpleDelatAsync");
+            //Execution will resume from this point when the async operation is completed. Expect to see different thread id.
+            Console.WriteLine("Exiting SimpleDelayAsync. The Thread id is: {0}.", Thread.CurrentThread.ManagedThreadId);
             return millis;
         }
+
+         public Task<int> SimpleDelayTaskFromResult(int millis) 
+         {
+            Console.WriteLine("In SimpleDelayTask .... The Thread id is: {0}.", Thread.CurrentThread.ManagedThreadId);
+            Task.Delay(millis); 
+            Console.WriteLine("Exiting SimpleDelayTask. The Thread id is: {0}.", Thread.CurrentThread.ManagedThreadId);
+            return Task.FromResult<int>(millis);
+        }
+
+        public Task<int> SimpleDelayTaskWithRun(int millis) {
+            Console.WriteLine("In SimpleDelayTask .... The Thread id is: {0}.", Thread.CurrentThread.ManagedThreadId);
+            Task<int> tempTask = Task.Run(() => 
+            {
+                //Since we are creating a task here expect to see it run asynchronously and on a different thread. 
+                Console.WriteLine(@"In SimpleDelayTask -> tempTask. Before Delay. The Thread id is: {0}.", Thread.CurrentThread.ManagedThreadId);
+                Task.Delay(millis); 
+                Console.WriteLine(@"In SimpleDelayTask -> tempTask. After Delay. The Thread id is: {0}.", Thread.CurrentThread.ManagedThreadId);
+                return millis; 
+            });
+            Console.WriteLine("Exiting SimpleDelayTask. The Thread id is: {0}.", Thread.CurrentThread.ManagedThreadId);
+            return tempTask;
+        }
+
 
         //A simple method to illustrate the await call for SimpleDelayAsync
         public async Task<int> TestAsyncSimpleDelay() {
         
             string prefix = "In TestAsyncSimpleDelay ";
             Console.WriteLine(prefix + "before invoking SimpleDelaysAsync");
-            Task<int> task = this.SimpleDelaysAsync(30);
+            Task<int> task = this.SimpleDelayAsync(30);
              Console.WriteLine(prefix + "after invoking SimpleDelaysAsync");
 
             int sleepFor = 10;
