@@ -116,6 +116,12 @@ namespace NetCoreBasics.NetAsync {
             return (int)task.Result;
         }
 
+        public async void TestAsyncVoidTaskException(int spinFor)
+        {
+            Thread.SpinWait(spinFor);
+            throw new ApplicationException("Exception thrown by TestAsyncVoidTaskException task");
+        }
+
         public static void RunSimpleDelayTest() {
             Console.WriteLine("\nRunning simple delay based async test ...");
             AsyncBasic asyncBasic = new AsyncBasic();

@@ -11,7 +11,7 @@ namespace NetCoreBasics.NetAsync
            Console.WriteLine("Running CS Basic stuff ...");
            AsyncBasic asyncBasic = new AsyncBasic();
 
-            bool runAsyncAwait = true;
+            bool runAsyncAwait = false;
             bool runAsyncBasic = false;
             bool runTestDeadlock = false;
 
@@ -53,6 +53,33 @@ namespace NetCoreBasics.NetAsync
                     sdtTaskWR.Status, Thread.CurrentThread.ManagedThreadId);
             }
 
+            #region some best practices ...
+
+            //Best practice 1 - async void tasks are useful for event handlers but generally avoid it. E.g., you cannot catch exceptions thrown in task.
+            bool runAsyncWaitExceptionTest = true;
+            if (runAsyncWaitExceptionTest)
+            {
+                Console.WriteLine("runAsyncWaitExceptionTest block is starting ...");
+                AppDomain.CurrentDomain.UnhandledException += GlobalExceptionHandler;
+                int spinFor = 20000;
+                try
+                {
+                    asyncBasic.TestAsyncVoidTaskException(spinFor);
+                    Thread.SpinWait(spinFor * 3);
+                    Console.WriteLine("After runAsyncWaitExceptionTest called and SpinWait.");
+                }
+                catch (Exception ex) // exceptions thrown in asyncBasic.TestAsyncVoidTaskException(...) would not get caught here.
+                {
+                    Console.WriteLine("runAsyncWaitExceptionTest caught an exception. ex.message is {0}", ex.Message);
+                }
+            }
+
+            //best practice #2 async all the way. 
+
+            //best practice #3 - using Configure Context. 
+
+            #endregion best practices
+
             if (runAsyncBasic) {
                 AsyncBasic.RunSimpleDelayTest(); //synchronous call
                 //following is async call but need to block on call as this Main
@@ -64,6 +91,16 @@ namespace NetCoreBasics.NetAsync
                 TestAsyncDeadlock tad = new TestAsyncDeadlock();
                 tad.TestDeadlock();
             }
+
+            Console.WriteLine("CS Basic stuff completed. Press any key to terminate ...");
+            Console.ReadLine();
+        }
+
+        public static void GlobalExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+        {
+            Console.WriteLine("Global exception handler caught unhandled exception. Exception is: {0}", e.ExceptionObject.ToString());
+            Console.WriteLine("CS Basic stuff forced to exit. Press any key to terminate ...");
+            Console.ReadLine();
         }
     }
 }
