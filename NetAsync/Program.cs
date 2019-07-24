@@ -53,6 +53,14 @@ namespace NetCoreBasics.NetAsync
                     sdtTaskWR.Status, Thread.CurrentThread.ManagedThreadId);
             }
 
+            #region async issues / things to remember
+
+            //Deadloocks
+
+            //Error handling
+
+            #endregion async issues
+
             #region some best practices ...
 
             //Best practice 1 - async void tasks are useful for event handlers but generally avoid it. E.g., you cannot catch exceptions thrown in task.
@@ -74,9 +82,11 @@ namespace NetCoreBasics.NetAsync
                 }
             }
 
-            //best practice #2 async all the way. 
-
             //best practice #3 - using Configure Context. 
+
+            //best practice #2 async all the way. 
+                //include table 
+
 
             #endregion best practices
 
