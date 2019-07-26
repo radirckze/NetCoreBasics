@@ -6,6 +6,7 @@ Note to self ***
 There is a lot of misleading / incorrect information on this topic. So, stick to
 official / vetted documentation. Some good resources:
 
+https://devblogs.microsoft.com/pfxteam/await-synchronizationcontext-and-console-apps/  (3 parts. Part 1 explains everything you need to know.)
 https://blog.stephencleary.com/2012/02/async-and-await.html
 https://msdn.microsoft.com/en-us/magazine/dn802603.aspx
 https://docs.microsoft.com/en-us/dotnet/csharp/async
