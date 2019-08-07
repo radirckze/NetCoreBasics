@@ -13,7 +13,7 @@ namespace NetCoreBasics.NetAsync
 
             bool runAsyncAwait = false;
             bool runAsyncBasic = false;
-            bool runTestDeadlock = false;
+            bool runTestDeadlock = true;
 
             if (runAsyncAwait)
             {
@@ -58,18 +58,23 @@ namespace NetCoreBasics.NetAsync
             //Deadloocks
 
             /* Deadlocks can occur when you mix async code with synchronous code (e.g., blocking Task.Wait, Task.Result etc.).
-             * What causes the deadlock is how SynchronizationContext are used. When a Task is awaited the current s-context is captured so 
-             * it can be used when the task is ready to be resumed. So when the await completes, the application attempts to execute the remaninder
-             * of the async method with the captured context. 
-             * Some applications e.g., GUI applicaton the s-context is tied to a thread. For some other, e.g., ASP.NET, the s-context is not tied to
-             * a thread but allows only one thread to run at a time.
-             * In such applications when using async with a blocking call if after the async call the executing thread has reached the blocking call, 
-             * then when the async is completed and it attempts to continue with the captured context, it finds the s-context is associated with a
-             * thread. This causes a deadlock as the async continuation is waiting for the s-context to be released by the thread and the thread is
-             * waiting for the Task.Result. 
+             * What causes the deadlock is how SynchronizationContext are used. When a Task is awaited the current sync-context is captured so 
+             * it can be used when the task is ready to be resumed. When the await completes, the application attempts to execute the remaninder
+             * of the async method with the captured sync-context. 
+             * In some application frameworks e.g., GUI applicatons, the s-context is tied to a thread. For some other, e.g., ASP.NET, the 
+             * sync-context is not tied to a thread but allows only one thread to run at a time.
+             * In such applications when using async with a blocking call if after the async call the executing thread reaches the blocking call, 
+             * then when the async is completed and it attempts to continue with the captured sync-context, it finds the context is associated with a
+             * thread that is blocked. This causes a deadlock as the async continuation is waiting for the sync-context to be released by the thread 
+             * and the thread is waiting for the Task.Result (from the continuation). 
              */
 
-            // 
+            if (runTestDeadlock) 
+            {
+                TestAsyncDeadlock tad = new TestAsyncDeadlock();
+                tad.TestDeadlock();
+            }
+ 
             //Error handling
 
             #endregion async issues
@@ -77,7 +82,7 @@ namespace NetCoreBasics.NetAsync
             #region some best practices ...
 
             //Best practice 1 - async void tasks are useful for event handlers but generally avoid it. E.g., you cannot catch exceptions thrown in task.
-            bool runAsyncWaitExceptionTest = true;
+            bool runAsyncWaitExceptionTest = false;
             if (runAsyncWaitExceptionTest)
             {
                 Console.WriteLine("runAsyncWaitExceptionTest block is starting ...");
@@ -108,11 +113,6 @@ namespace NetCoreBasics.NetAsync
                 //following is async call but need to block on call as this Main
                 //method cannot be async
                 AsyncBasic.RunGetContentTestAsync().Wait(); 
-            }
-
-            if (runTestDeadlock) {
-                TestAsyncDeadlock tad = new TestAsyncDeadlock();
-                tad.TestDeadlock();
             }
 
             Console.WriteLine("CS Basic stuff completed. Press any key to terminate ...");
