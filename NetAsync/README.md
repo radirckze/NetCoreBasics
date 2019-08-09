@@ -26,5 +26,4 @@ Warning: The code in this folder is for my personal testing. It does not contain
 any try catch blocks. Ideally need to check whether task completed, faulted, 
 cancelled, etc., and handle those cases. 
 
-The calls in Program.cs are not all async. For a console application, this is OK as the console application is not a service, is single threaded by default. But for an ASP service (WebAPI method for example) we should use async methods with await throughout the chain so the thread gets released whenever there is async work going on allowing other calls to the server to execute.
 

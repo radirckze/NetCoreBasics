@@ -12,9 +12,6 @@ namespace NetCoreBasics.NetAsync
            AsyncBasic asyncBasic = new AsyncBasic();
 
             bool runAsyncAwait = false;
-            bool runAsyncBasic = false;
-            bool runTestDeadlock = true;
-
             if (runAsyncAwait)
             {
                 Console.WriteLine(@"In runAsyncAwait. Before calling SimpleDelayAsync. The Thread id is: {0}.",
@@ -57,22 +54,29 @@ namespace NetCoreBasics.NetAsync
 
             //Deadloocks
 
-            /* Deadlocks can occur when you mix async code with synchronous code (e.g., blocking Task.Wait, Task.Result etc.).
-             * What causes the deadlock is how SynchronizationContext are used. When a Task is awaited the current sync-context is captured so 
-             * it can be used when the task is ready to be resumed. When the await completes, the application attempts to execute the remaninder
-             * of the async method with the captured sync-context. 
-             * In some application frameworks e.g., GUI applicatons, the s-context is tied to a thread. For some other, e.g., ASP.NET, the 
-             * sync-context is not tied to a thread but allows only one thread to run at a time.
-             * In such applications when using async with a blocking call if after the async call the executing thread reaches the blocking call, 
-             * then when the async is completed and it attempts to continue with the captured sync-context, it finds the context is associated with a
-             * thread that is blocked. This causes a deadlock as the async continuation is waiting for the sync-context to be released by the thread 
-             * and the thread is waiting for the Task.Result (from the continuation). 
+            /* See https://devblogs.microsoft.com/pfxteam/await-synchronizationcontext-and-console-apps/ for well written explanation.
+             * Deadlocks can occur when you mix async code with synchronous code (e.g., blocking Task.Wait, Task.Result etc.).
+             * What causes the deadlock is how SynchronizationContext are used. When a Task is awaited the current sync-context, if any,  is 
+             * captured so it can be used when the task is ready to be resumed. When the await completes, the application attempts to execute the
+             * remaninder of the async method with the captured sync-context, more specically, posts it to the async-context, if any, to be scheduled 
+             * for execution. In some application frameworks e.g., GUI applicatons, the sync-contextt is tied to a thread. For some others, e.g.,  
+             * ASP.NET, the sync-context is not tied to a thread but allows only one thread to run at a time.
+             * In such applications when using async with a blocking call (say Task.Result), if after the async call the executing thread reaches  
+             * the blocking call, the thread/sync-context is blocked. When the async is completed and it attempts to continue with the captured  
+             * sync-context it finds sync-context is blocked, waiting for Task.Result. This causes a deadlock as the async continuation is   
+             * waiting for the sync-context to schedule it for exacution but the sync-context is blocked waiting for the Task.Result.
+             * Console applications do not face this issue as Console applications do not have a sync-context and as such are scheduled by the
+             * default task scheduler. 
              */
 
+            // NOTE*: The following code would not deadlock in this console application but will deadlock in an ASP.NET or GUI application.
+            bool runTestDeadlock = true;
             if (runTestDeadlock) 
             {
-                TestAsyncDeadlock tad = new TestAsyncDeadlock();
-                tad.TestDeadlock();
+                string tmpUrl = "http://developer.microsoft.com/";
+                Task<int> task = TestAsyncDeadlock.GetContentsAsync(tmpUrl);
+                int lengh = task.Result;
+                Console.WriteLine("The number of characters inpage<{0}> is: {1}", tmpUrl, lengh);
             }
  
             //Error handling
@@ -100,20 +104,12 @@ namespace NetCoreBasics.NetAsync
                 }
             }
 
+            //best practice #2 async all the way. 
+            //include table 
+
             //best practice #3 - using Configure Context. 
 
-            //best practice #2 async all the way. 
-                //include table 
-
-
             #endregion best practices
-
-            if (runAsyncBasic) {
-                AsyncBasic.RunSimpleDelayTest(); //synchronous call
-                //following is async call but need to block on call as this Main
-                //method cannot be async
-                AsyncBasic.RunGetContentTestAsync().Wait(); 
-            }
 
             Console.WriteLine("CS Basic stuff completed. Press any key to terminate ...");
             Console.ReadLine();
