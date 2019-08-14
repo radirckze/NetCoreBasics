@@ -31,6 +31,13 @@ Avoid async void | Prefer async Task methods over async void methods | Event han
 Async all the way | Don’t mix blocking and async code | Console main method
 Configure context | Use ConfigureAwait(false) when you can | Methods that require con­text
 
+To do this | instead of this | use this
+--- | --- | ---
+Retrieve the result of a background task | Task.Wait or Task.Result | await
+Wait for any task to complete | Task.WaitAny | await Task.WhenAny
+Retrieve the results of multiple tasks | Task.WaitAll | await Task.WhenAll
+Wait a period of time | Thread.Sleep | await Task.Delay
+
 Warning: The code in this folder is for my personal testing. It does not contain
 any try catch blocks. Ideally need to check whether task completed, faulted, 
 cancelled, etc., and handle those cases. 

@@ -119,9 +119,12 @@ namespace NetCoreBasics.NetAsync
             }
 
             //best practice #2 async all the way. 
-            //include table 
+
 
             //best practice #3 - using Configure Context. 
+            //Use ConfigureAwait(true) to tell the framework to schedule the continuation on the original context (default). Using false
+            //will eliminate the deadlock discussed above as it would indicate that the continuation does not need to be scheduled on the
+            //originally captured context.
 
 
             #endregion best practices
