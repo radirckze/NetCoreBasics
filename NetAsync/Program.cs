@@ -25,7 +25,7 @@ namespace NetCoreBasics.NetAsync
                 
                 //Key note: Its the type that is awitable, not the method returning the type. In other words you can
                 //await the result *because it returns a task* and not because it is async. As such you can also await
-                //thge result of  non-async method that returns a task as shown below
+                //the result of  non-async method that returns a task as shown below
                 Console.WriteLine();
 
                 Console.WriteLine(@"In runAsyncAwait. Before calling SimpleDelayTaskFromResult. The Thread id is: {0}.", 
@@ -48,6 +48,22 @@ namespace NetCoreBasics.NetAsync
                 Task.WaitAll(sdtTaskWR);
                 Console.WriteLine(@"In runAsyncAwait. After WaitAll. The task status is {0}. The Thread id is: {1}", 
                     sdtTaskWR.Status, Thread.CurrentThread.ManagedThreadId);
+
+                //Error handling 
+                Task<int> tteTask = null;
+                try
+                {
+                    tteTask = asyncBasic.TestAsyncException(2000);
+                    Task.WaitAll(tteTask); 
+                    //Note: WaitAll does not catch/mask any exceptions thrown within the task so we never get to the next line. 
+                    //However use while(task.Status == WaitingForActivation OR Running) and we can then hit the line below.
+                    Console.WriteLine("The status of the TestTaskException task is {0}", tteTask.Status);
+                }
+                catch (Exception ex)  
+                {
+                    Console.WriteLine("Caught exception thrown byTestTaskException task. Task Satus is: {0}. Exception Message is: {1}", tteTask.Status, ex.Message);
+                }
+
             }
 
             #region async issues / things to remember
@@ -70,7 +86,7 @@ namespace NetCoreBasics.NetAsync
              */
 
             // NOTE*: The following code would not deadlock in this console application but will deadlock in an ASP.NET or GUI application.
-            bool runTestDeadlock = true;
+            bool runTestDeadlock = false;
             if (runTestDeadlock) 
             {
                 string tmpUrl = "http://developer.microsoft.com/";
@@ -78,8 +94,6 @@ namespace NetCoreBasics.NetAsync
                 int lengh = task.Result;
                 Console.WriteLine("The number of characters inpage<{0}> is: {1}", tmpUrl, lengh);
             }
- 
-            //Error handling
 
             #endregion async issues
 
@@ -94,7 +108,7 @@ namespace NetCoreBasics.NetAsync
                 int spinFor = 20000;
                 try
                 {
-                    asyncBasic.TestAsyncVoidTaskException(spinFor);
+                    asyncBasic.TestAsyncVoidTaskException();
                     Thread.SpinWait(spinFor * 3);
                     Console.WriteLine("After runAsyncWaitExceptionTest called and SpinWait.");
                 }
@@ -108,6 +122,7 @@ namespace NetCoreBasics.NetAsync
             //include table 
 
             //best practice #3 - using Configure Context. 
+
 
             #endregion best practices
 

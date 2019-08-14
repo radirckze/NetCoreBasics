@@ -22,6 +22,15 @@ Note: under the covers, the await call actually create a callback. Essentially, 
 
 Note: task.wait() and task.Result are blocking calls. Still useful in some cases.
 
+### Some best practice notes 
+Below tables copied directly from https://msdn.microsoft.com/en-us/magazine/jj991977.aspx
+
+Name | Description | Exception
+--- | --- | ---
+Avoid async void | Prefer async Task methods over async void methods | Event handlers
+Async all the way | Don’t mix blocking and async code | Console main method
+Configure context | Use ConfigureAwait(false) when you can | Methods that require con­text
+
 Warning: The code in this folder is for my personal testing. It does not contain
 any try catch blocks. Ideally need to check whether task completed, faulted, 
 cancelled, etc., and handle those cases. 
