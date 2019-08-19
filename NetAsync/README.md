@@ -22,6 +22,8 @@ Note: under the covers, the await call actually create a callback. Essentially, 
 
 Note: task.wait() and task.Result are blocking calls. Still useful in some cases.
 
+Deadlocks: See WinForms application in AsyncDeadlock folder for example that deadlocks (and 2 patters that accomplish the same thing that would not deadlock).
+
 ### Some best practice notes 
 Below tables copied directly from https://msdn.microsoft.com/en-us/magazine/jj991977.aspx
 
