@@ -16,6 +16,14 @@ namespace Delegates
         static void Main(string[] args)
         {
 
+            bool runDelegateEvolution = true;
+            if (runDelegateEvolution)
+            {
+                DelegateEvolution de = new DelegateEvolution();
+                de.Run();
+                System.Environment.Exit(0);
+            }
+
             // Delegate example
             DelegateExample delegateEg = new DelegateExample();
             changeCaps toUpper = new changeCaps(delegateEg.ToUpperMethod);
